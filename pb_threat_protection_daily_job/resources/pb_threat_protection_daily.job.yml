@@ -1,0 +1,69 @@
+resources:
+  jobs:
+    pb_threat_protection_daily_job:
+      name: pb_threat_protection_daily_job
+      tasks:
+        - task_key: Download_snapshot
+          disable_auto_optimization: false
+          disabled: false
+          email_notifications: {}
+          max_retries: 2
+          min_retry_interval_millis: 900000
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/01_download_snapshots.ipynb
+            source: WORKSPACE
+          retry_on_timeout: false
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Parse_domains
+          depends_on:
+            - task_key: Download_snapshot
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/02_parse_snapshots.ipynb
+            source: WORKSPACE
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Build_current_states
+          depends_on:
+            - task_key: Parse_domains
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/03_build_current_state.ipynb
+            source: WORKSPACE
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Archive_history
+          depends_on:
+            - task_key: Build_current_states
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/04_archive_history.ipynb
+            source: WORKSPACE
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+      parameters:
+        - name: catalog
+          default: workspace
+        - name: schema
+          default: pb_threat_intelligence
+      email_notifications:
+        no_alert_for_skipped_runs: false
+      health:
+        rules:
+          - metric: RUN_DURATION_SECONDS
+            op: GREATER_THAN
+            value: 1200
+      max_concurrent_runs: 1
+      performance_target: PERFORMANCE_OPTIMIZED
+      queue:
+        enabled: true
+      timeout_seconds: 1800
+      webhook_notifications: {}
