@@ -1,7 +1,9 @@
 # User manual
 
 ###### Prerequisits:
-- Logged-in databricks subsricption or free edition account
+- A Databricks workspace with Unity Catalog enabled, including a suitable Free Edition workspace.
+- Permission to deploy/run jobs and access to compute capable of running the notebooks.
+- An existing catalog where you can create a schema, Delta tables and a volume. The default catalog is workspace.
 
 ##### Step-by-step instruction:
 
@@ -25,3 +27,17 @@
 10. Choose depending on preferences / run purpose. If you want to run:
     - **full daily pipeline** on the actuall feeds' data sources - go to `pb_threat_protection_daily_job` and run it
     - **test pipeline** on saved input snapshots - go to `pb_threat_protection_replay` and run it
+
+### Replay and safe retries
+
+- The replay job points to the included `stored_inputs/20261011/194013Z_0de50b39` snapshot. If you want to rerun both of the stored inputs, for the second run change the parameter to `stored_inputs/20261011/200837Z_dfd4f58a`
+- In case you already run daily pipeline with up-to-date sources and you want to run a historical replay:
+    - choose a separate schema (for example `pb_threat_intelligence_replay`),
+    - run the config job with that schema,
+    - then run replay with the same catalog/schema.
+- Do not run daily and replay concurrently against one schema: their concurrency limits are per job.
+- An older snapshot is rejected if a newer current state/history already exists.
+If the history task fails, repair the same run before starting a new snapshot.
+
+After a successful run, execute `docs/verification.sql` with the same catalog/schema
+and the run_id (`194013Z_0de50b39` / `200837Z_dfd4f58a`). The expected differences are zero.

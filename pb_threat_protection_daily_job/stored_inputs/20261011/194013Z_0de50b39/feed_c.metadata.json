@@ -1,0 +1,12 @@
+{
+  "run_id": "194013Z_0de50b39",
+  "feed_name": "feed_c",
+  "source_url": "https://badmojr.gitlab.io/1hosts/Lite/adblock.txt",
+  "snapshot_path": "/Volumes/workspace/pb_threat_intelligence/feed_snapshots/20261011/194013Z_0de50b39/feed_c.txt",
+  "download_started_at": "2026-10-11T19:40:22.038786+00:00",
+  "download_finished_at": "2026-10-11T19:40:22.734899+00:00",
+  "size_bytes": 2040193,
+  "sha256": "6179b450d92ff7e2c8b0d988e871bc4cdd5983093ff9b6a73b1e5d4e487493e8",
+  "download_status": "downloaded",
+  "error": null
+}

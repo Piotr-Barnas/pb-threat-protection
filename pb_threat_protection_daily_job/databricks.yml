@@ -16,11 +16,11 @@ variables:
     description: "Schema for threat protection tables and volumes"
     default: "pb_threat_intelligence"
   run_as_principal:
-    description: "User or service principal that prod jobs run as (defaults to the deploying user)"
+    description: "User that prod jobs run as (defaults to the deploying user)"
     default: ${workspace.current_user.userName}
 
 targets:
-  # The 'dev' target, for development purposes. This target is the default.
+  # The 'dev' target, for development purposes.
   # No hardcoded host: the deployer's CLI auth (or DABRICKS_HOST) selects the workspace,
   # and the default root path (/Users/<deployer>/.bundle/...) keeps each person's copy separate.
   dev:
@@ -30,8 +30,8 @@ targets:
   prod:
     mode: production
     default: true
-    # Jobs run as the deploying user unless overridden with a service principal,
-    # e.g. databricks bundle deploy --target prod --var=run_as_principal=<application-id>
+    # Jobs run as the deploying user. This variable accepts a user name.
+    # For a service principal, use service_principal_name instead of user_name.
     # see https://docs.databricks.com/dev-tools/bundles/permissions.html.
     run_as:
       user_name: ${var.run_as_principal}
