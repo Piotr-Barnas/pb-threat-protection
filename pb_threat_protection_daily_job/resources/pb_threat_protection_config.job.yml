@@ -1,0 +1,25 @@
+resources:
+  jobs:
+    pb_threat_protection_config:
+      name: pb_threat_protection_config
+      tasks:
+        - task_key: Configuration
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/00_configuration.ipynb
+            source: WORKSPACE
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema
+          default: ${var.schema}
+      email_notifications: {}
+      max_concurrent_runs: 4
+      queue:
+        enabled: true
+      timeout_seconds: 0
+      webhook_notifications: {}

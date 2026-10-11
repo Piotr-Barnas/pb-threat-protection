@@ -6,22 +6,32 @@ include:
   - resources/*.yml
   - resources/*/*.yml
 
+# Workspace-agnostic variables. Each deployer can override these at deploy time,
+# e.g. databricks bundle deploy --target dev --var=catalog=main
+variables:
+  catalog:
+    description: "Unity Catalog where threat protection tables and volumes live"
+    default: "workspace"
+  schema:
+    description: "Schema for threat protection tables and volumes"
+    default: "pb_threat_intelligence"
+  run_as_principal:
+    description: "User or service principal that prod jobs run as (defaults to the deploying user)"
+    default: ${workspace.current_user.userName}
+
 targets:
   # The 'dev' target, for development purposes. This target is the default.
+  # No hardcoded host: the deployer's CLI auth (or DABRICKS_HOST) selects the workspace,
+  # and the default root path (/Users/<deployer>/.bundle/...) keeps each person's copy separate.
   dev:
     mode: development
     default: true
-    workspace:
-      host: https://dbc-c12349f9-6965.cloud.databricks.com
 
   # The 'prod' target, used for production deployment.
   prod:
     mode: production
-    workspace:
-      host: https://dbc-c12349f9-6965.cloud.databricks.com
-      # We always use /Users/piotr.barnas13@gmail.com for all resources to make sure we only have a single copy.
-      root_path: /Users/piotr.barnas13@gmail.com/.bundle/${bundle.name}/${bundle.target}
+    # Jobs run as the deploying user unless overridden with a service principal,
+    # e.g. databricks bundle deploy --target prod --var=run_as_principal=<application-id>
+    # see https://docs.databricks.com/dev-tools/bundles/permissions.html.
     run_as:
-      # This runs as piotr.barnas13@gmail.com in production. We could also use a service principal here,
-      # see https://docs.databricks.com/dev-tools/bundles/permissions.html.
-      user_name: piotr.barnas13@gmail.com
+      user_name: ${var.run_as_principal}

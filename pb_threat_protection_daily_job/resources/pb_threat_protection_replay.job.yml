@@ -1,0 +1,75 @@
+resources:
+  jobs:
+    pb_threat_protection_replay:
+      name: pb_threat_protection_replay
+      tasks:
+        - task_key: Parse_domains
+          disable_auto_optimization: false
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/02_parse_snapshots.ipynb
+            source: WORKSPACE
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Build_current_states
+          depends_on:
+            - task_key: Parse_domains
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/03_build_current_state.ipynb
+            source: WORKSPACE
+            base_parameters:
+              run_id: "{{tasks.Parse_domains.values.run_id}}"
+              ingestion_ts: "{{tasks.Parse_domains.values.ingestion_ts}}"
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Validate_counts
+          depends_on:
+            - task_key: Build_current_states
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/04_final_validation.ipynb
+            source: WORKSPACE
+            base_parameters:
+              run_id: "{{tasks.Parse_domains.values.run_id}}"
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Archive_history
+          depends_on:
+            - task_key: Validate_counts
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/pb_threat_protection_daily_job/05_archive_history.ipynb
+            source: WORKSPACE
+            base_parameters:
+              run_id: "{{tasks.Parse_domains.values.run_id}}"
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema
+          default: ${var.schema}
+        - name: snapshot_dir
+          default: ${workspace.root_path}/stored_inputs
+      email_notifications:
+        no_alert_for_skipped_runs: false
+      health:
+        rules:
+          - metric: RUN_DURATION_SECONDS
+            op: GREATER_THAN
+            value: 1200
+      max_concurrent_runs: 1
+      performance_target: PERFORMANCE_OPTIMIZED
+      queue:
+        enabled: true
+      timeout_seconds: 1800
+      webhook_notifications: {}

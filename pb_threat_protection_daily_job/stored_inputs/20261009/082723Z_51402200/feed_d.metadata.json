@@ -1,0 +1,12 @@
+{
+  "run_id": "082723Z_51402200",
+  "feed_name": "feed_d",
+  "source_url": "https://raw.githubusercontent.com/jdlingyu/ad-wars/master/hosts",
+  "snapshot_path": "/Volumes/workspace/pb_threat_intelligence/feed_snapshots/20261009/082723Z_51402200/feed_d.txt",
+  "download_started_at": "2026-10-09T08:27:34.791016+00:00",
+  "download_finished_at": "2026-10-09T08:27:35.152878+00:00",
+  "size_bytes": 49407,
+  "sha256": "061f79539890ca296f6492a0687b4b6eca780544da9b437756e881291214788e",
+  "download_status": "downloaded",
+  "error": null
+}
