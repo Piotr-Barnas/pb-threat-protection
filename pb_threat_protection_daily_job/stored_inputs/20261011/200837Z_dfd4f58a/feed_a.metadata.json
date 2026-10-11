@@ -1,0 +1,12 @@
+{
+  "run_id": "200837Z_dfd4f58a",
+  "feed_name": "feed_a",
+  "source_url": "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
+  "snapshot_path": "/Volumes/workspace/pb_threat_intelligence/feed_snapshots/20261011/200837Z_dfd4f58a/feed_a.txt",
+  "download_started_at": "2026-10-11T20:08:46.360600+00:00",
+  "download_finished_at": "2026-10-11T20:08:46.683398+00:00",
+  "size_bytes": 2229037,
+  "sha256": "b83fc7acc934248ea4995dac213aa0ebb92d6824fd8469c1c20327b445db9051",
+  "download_status": "downloaded",
+  "error": null
+}
