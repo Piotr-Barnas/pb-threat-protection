@@ -25,11 +25,11 @@ targets:
   # and the default root path (/Users/<deployer>/.bundle/...) keeps each person's copy separate.
   dev:
     mode: development
-    default: true
 
   # The 'prod' target, used for production deployment.
   prod:
     mode: production
+    default: true
     # Jobs run as the deploying user unless overridden with a service principal,
     # e.g. databricks bundle deploy --target prod --var=run_as_principal=<application-id>
     # see https://docs.databricks.com/dev-tools/bundles/permissions.html.

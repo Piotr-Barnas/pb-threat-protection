@@ -59,7 +59,7 @@ resources:
         - name: schema
           default: ${var.schema}
         - name: snapshot_dir
-          default: ${workspace.root_path}/stored_inputs
+          default: ${workspace.root_path}/files/stored_inputs/20261009/082723Z_51402200 
       email_notifications:
         no_alert_for_skipped_runs: false
       health:
